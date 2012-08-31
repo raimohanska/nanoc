@@ -1,4 +1,5 @@
 # encoding: utf-8
+require 'json'
 
 module Nanoc::DataSources
 
@@ -245,7 +246,7 @@ module Nanoc::DataSources
       if data !~ /\A-{3,5}\s*$/
         return [ {}, data ]
       end
-
+      
       # Split data
       pieces = data.split(/^(-{5}|-{3})\s*$/)
       if pieces.size < 4
@@ -258,7 +259,11 @@ module Nanoc::DataSources
       begin
         meta = YAML.load(pieces[2]) || {}
       rescue Exception => e
-        raise "Could not parse YAML for #{content_filename}: #{e.message}"
+        begin
+          meta = JSON.load(pieces[2])||{}
+        rescue Exception => e2
+          raise "Could not parse YAML for #{content_filename}: #{e.message}"
+        end
       end
       content = pieces[4..-1].join.strip
 
