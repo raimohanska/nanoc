@@ -256,14 +256,18 @@ module Nanoc::DataSources
       end
 
       # Parse
+      meta_format = (@site ? @site.config[:embedded_metadata_format] : nil) || "YAML"
       begin
-        meta = YAML.load(pieces[2]) || {}
-      rescue Exception => e
-        begin
+        case meta_format
+        when "YAML" 
+          meta = YAML.load(pieces[2]) || {}
+        when "JSON"
           meta = JSON.load(pieces[2])||{}
-        rescue Exception => e2
-          raise "Could not parse YAML for #{content_filename}: #{e.message}"
+        else
+          raise "unknown embedded_metadata_format: #{meta_format}"
         end
+      rescue Exception => e
+        raise "Could not parse #{meta_format} for #{content_filename}: #{e.message}"
       end
       content = pieces[4..-1].join.strip
 
