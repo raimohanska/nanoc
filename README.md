@@ -20,6 +20,11 @@ the following places will help you out:
 
 nanoc uses [Semantic Versioning](semver.org).
 
+## Building and installing from source
+
+    gem build nanoc.gemspec
+    gem install nanoc-3.5.0.gem
+
 ## Source Code Documentation
 
 The source code is located in `lib/nanoc` and is structured in a few
